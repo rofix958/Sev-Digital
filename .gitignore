@@ -1,0 +1,27 @@
+# نظام الملفات
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ملفات مؤقتة
+*.tmp
+*.log
+*.cache
+
+# حزم مجلّفة
+Sev-Digital-Site.zip
+*.zip
+
+# أدوات الاستضافة/الحزم
+node_modules/
+vendor/
+
+# المحررات
+.idea/
+.vscode/*.log
+*.swp
+*.swo
+
+# إعدادات النشر الخاصه
+.env
+.env.local
