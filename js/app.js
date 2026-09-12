@@ -433,17 +433,49 @@
       e.preventDefault();
       var name = document.getElementById("fullName");
       var email = document.getElementById("email");
+      var phone = document.getElementById("phone");
       if (!name || !email || !name.value.trim() || !email.value.trim() || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value)) {
         showToast("❌ يرجى تعبئة الاسم والبريد الإلكتروني بشكل صحيح", true);
         return;
       }
+      var summaryLines = items.map(function (it) {
+        var pr = PRODUCTS.find(function (x) { return x.id === it.id; });
+        return pr ? pr.title + " × " + it.qty : null;
+      }).filter(Boolean);
+      var summaryText = summaryLines.join("، ");
+      var totalText = money(sub + tax);
+
+      /* 1) إشعار البائع عبر الإيميل (Netlify Forms) */
+      var fd = new FormData();
+      fd.append("form-name", "checkout");
+      fd.append("bot-field", "");
+      fd.append("fullName", name.value.trim());
+      fd.append("email", email.value.trim());
+      if (phone && phone.value) fd.append("phone", phone.value.trim());
+      fd.append("items", summaryText);
+      fd.append("total", totalText);
+      fd.append("method", CFG.paymentLabel || "تأكيد يدوي");
+      fetch("/", { method: "POST", body: fd, headers: { "Accept": "application/json" } }).catch(function () {});
+
+      /* 2) إشعار البائع عبر الواتساب برسالة جاهزة */
+      var waDigits = ((CFG.contact && CFG.contact.whatsapp) || "").replace(/[^0-9]/g, "");
+      if (waDigits) {
+        var msg = "🛒 طلبية جديدة من Sev Digital" +
+          "\n👤 " + name.value.trim() +
+          "\n📧 " + email.value.trim() +
+          (phone && phone.value ? "\n📞 " + phone.value.trim() : "") +
+          "\n📦 " + summaryText +
+          "\n💰 " + totalText +
+          "\n" + (CFG.paymentLabel || "تأكيد يدوي");
+        window.open("https://wa.me/" + waDigits + "?text=" + encodeURIComponent(msg), "_blank");
+      }
+
       if (productId) {
         saveCart(getCart().filter(function (i) { return i.id !== Number(productId); }));
       } else {
         saveCart([]);
       }
       showToast("✅ تم استلام طلبك بنجاح!");
-      var summaryText = shown.map(function (x) { return x.title; }).join(", ");
       setTimeout(function () {
         window.location.href = "success.html?name=" + encodeURIComponent(name.value.trim()) + "&items=" + encodeURIComponent(summaryText);
       }, 900);
@@ -505,7 +537,7 @@
     var iconKinds = ["red", "blue", "gold"];
     box.innerHTML = items.map(function (p, i) {
       return (
-        '<div class="mini-product" onclick="window.location.href=\'product.html?id=' + p.id + '\'" style="cursor:pointer">' +
+        '<div class="mini-product anim-rise" style="cursor:pointer;animation-delay:' + (i * 140 + 180) + 'ms" onclick="window.location.href=\'product.html?id=' + p.id + '\'">' +
           '<span class="mp-icon ' + iconKinds[i % 3] + '">' + p.emoji + "</span>" +
           "<div><p class=\"mp-name\">" + p.title + '</p><p class="mp-cat">' + p.catName + "</p></div>" +
           '<div class="mp-info"><p class="mp-price">' + money(p.price) + '</p><p class="mp-sales">🔥 ' + p.sales + " مبيعات</p></div>" +
@@ -627,7 +659,11 @@
         }
       });
     }, { threshold: 0.06 });
-    elems.forEach(function (el) { el.classList.add("reveal"); io.observe(el); });
+    elems.forEach(function (el, i) {
+      el.classList.add("reveal");
+      el.style.transitionDelay = Math.min(i % 12, 10) * 55 + "ms";
+      io.observe(el);
+    });
   }
 
   /* ---------- PWA ---------- */

@@ -47,9 +47,9 @@ var SITE_CONFIG = {
 
   /* ---------- التواصل ---------- */
   contact: {
-    email: "support@sevdigital.com",
-    phone: "+212 6 00 00 00 00",
-    whatsapp: "+212 6 00 00 00 00",
+    email: "ISMAILROFIX632@GMAIL.com",
+    phone: "+212 771016975",
+    whatsapp: "+212 771016975",
     workHours: "متاحون 24/7 طوال أيام الأسبوع"
   },
 
