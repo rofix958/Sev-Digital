@@ -706,64 +706,6 @@
     document.body.appendChild(a);
   }
 
-  /* ---------- PWA ---------- */
-  var deferredPrompt = null;
-  var installDismissed = false;
-  function initInstall() {
-    var bar = document.getElementById("installBar");
-    var closeBtn = document.getElementById("installClose");
-    var yesBtn = document.getElementById("installYes");
-
-    var dismissedSaved = false;
-    try { dismissedSaved = localStorage.getItem("sev_install_dismissed") === "1"; } catch (e) {}
-    if (!dismissedSaved) dismissedSaved = document.cookie.indexOf("sev_install_dismissed=1") > -1;
-    installDismissed = dismissedSaved;
-
-    window.addEventListener("beforeinstallprompt", function (e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      if (!installDismissed && bar) bar.classList.add("show");
-    });
-
-    function dismissBar(save) {
-      installDismissed = true;
-      if (bar) bar.classList.remove("show");
-      if (save) {
-        try { localStorage.setItem("sev_install_dismissed", "1"); } catch (e) {}
-        try { document.cookie = "sev_install_dismissed=1; max-age=31536000; path=/"; } catch (e) {}
-      }
-    }
-
-    if (closeBtn) closeBtn.addEventListener("click", function (ev) {
-      if (ev) ev.preventDefault();
-      dismissBar(true);
-      deferredPrompt = null;
-    });
-
-    document.addEventListener("click", function (ev) {
-      var t = ev.target && ev.target.closest ? ev.target.closest("#installClose") : null;
-      if (t) {
-        if (ev) ev.preventDefault();
-        dismissBar(true);
-        deferredPrompt = null;
-      }
-    });
-
-    window.addEventListener("appinstalled", function () { dismissBar(true); });
-
-    if (yesBtn) yesBtn.addEventListener("click", function () {
-      if (!deferredPrompt) { dismissBar(true); return; }
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then(function () {
-        dismissBar(true);
-        deferredPrompt = null;
-      }).catch(function () {
-        dismissBar(true);
-        deferredPrompt = null;
-      });
-    });
-  }
-
   function initSW() {
     if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(function () {});
   }
@@ -786,7 +728,6 @@
     renderCartCount();
     initHamburger();
     initToTop();
-    initInstall();
     initSW();
     initAppBar();
     initWaFloat();
