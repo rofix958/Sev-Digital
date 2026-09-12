@@ -139,6 +139,8 @@ input, select, textarea { font-family: inherit; }
   box-shadow: 0 8px 20px rgba(230, 57, 70, 0.35);
 }
 
+.brand-icon svg { width: 26px; height: 26px; display: block; }
+
 .brand span { background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 .nav-links { display: flex; align-items: center; gap: 26px; }
@@ -410,8 +412,8 @@ input, select, textarea { font-family: inherit; }
 .product-card:hover .big-emoji { transform: scale(1.12) rotate(-4deg); }
 
 .product-media .product-img { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
-.product-media .product-img .big-emoji { position: absolute; }
-.product-media .product-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 26px 32px; }
+.product-media .product-img .big-emoji { display: none; }
+.product-media .product-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 24px 30px; }
 
 .product-badge {
   position: absolute;
@@ -695,7 +697,8 @@ input, select, textarea { font-family: inherit; }
   overflow: hidden;
 }
 
-.product-gallery .big-emoji { font-size: 7rem; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.35)); animation: floaty 6s ease-in-out infinite; }
+.product-gallery .big-emoji { font-size: 7rem; font-weight: 900; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.35)); animation: floaty 6s ease-in-out infinite; }
+.product-gallery.has-img .big-emoji { display: none; }
 .product-gallery img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 46px; }
 
 .product-info h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 800; margin: 8px 0 12px; }

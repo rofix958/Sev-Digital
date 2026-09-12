@@ -157,7 +157,7 @@
       ? '<span class="product-badge ' + p.badgeColor + '">' + p.badge + "</span>"
       : "";
     var media = p.img
-      ? '<span class="product-img"><span class="big-emoji">' + p.emoji + '</span><img src="' + p.img + '" alt="' + p.title + '" loading="lazy" onerror="this.remove()"></span>'
+      ? '<span class="product-img"><img src="' + p.img + '" alt="' + p.title + '" loading="lazy" onerror="this.nextElementSibling.style.display=\'grid\';this.remove()"><span class="big-emoji">' + p.emoji + '</span></span>'
       : '<span class="big-emoji">' + p.emoji + "</span>";
     return (
       '<article class="product-card card-hover-glow" data-cat="' + p.cat + '">' +
@@ -265,7 +265,7 @@
     if (relatedBox) renderProductsGrid(relatedBox, related);
 
     var gallery = product.img
-      ? '<div class="product-gallery"><span class="big-emoji">' + product.emoji + '</span><img src="' + product.img + '" alt="' + product.title + '" onerror="this.remove()"></div>'
+      ? '<div class="product-gallery has-img"><img src="' + product.img + '" alt="' + product.title + '" onerror="this.nextElementSibling.style.display=\'grid\';this.remove()"><span class="big-emoji">' + product.emoji + '</span></div>'
       : '<div class="product-gallery"><span class="big-emoji">' + product.emoji + "</span></div>";
 
     detail.innerHTML =
