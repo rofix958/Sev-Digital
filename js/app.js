@@ -445,7 +445,7 @@
       var summaryText = summaryLines.join("، ");
       var totalText = money(sub + tax);
 
-      /* 1) إشعار البائع عبر الإيميل (Netlify Forms) */
+      /* 1) إشعار البائع عبر الإيميل (Netlify Forms) — يُرسل قبل الانتقال حتى لا يُقطَع */
       var fd = new FormData();
       fd.append("form-name", "checkout");
       fd.append("bot-field", "");
@@ -455,7 +455,11 @@
       fd.append("items", summaryText);
       fd.append("total", totalText);
       fd.append("method", CFG.paymentLabel || "تأكيد يدوي");
-      fetch("/", { method: "POST", body: fd, headers: { "Accept": "application/json" } }).catch(function () {});
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon("/", fd);
+      } else {
+        fetch("/", { method: "POST", body: fd, keepalive: true, headers: { "Accept": "application/json" } }).catch(function () {});
+      }
 
       /* 2) إشعار البائع عبر الواتساب برسالة جاهزة */
       var waDigits = ((CFG.contact && CFG.contact.whatsapp) || "").replace(/[^0-9]/g, "");
@@ -477,7 +481,7 @@
       }
       showToast("✅ تم استلام طلبك بنجاح!");
       setTimeout(function () {
-        window.location.href = "success.html?name=" + encodeURIComponent(name.value.trim()) + "&items=" + encodeURIComponent(summaryText);
+        window.location.href = "success.html?name=" + encodeURIComponent(name.value.trim()) + "&items=" + encodeURIComponent(summaryText) + "&total=" + encodeURIComponent(totalText);
       }, 900);
     });
   }
@@ -487,15 +491,35 @@
     var box = document.getElementById("successBody");
     if (!box) return;
     var params = new URLSearchParams(window.location.search);
+    var nameRaw = params.get("name") || "عميلنا العزيز";
+    var itemsRaw = params.get("items") || "المنتجات الرقمية";
+    var totalRaw = params.get("total") || "حسب ملخص الطلب";
+    var ref = "SV-" + Date.now().toString(36).toUpperCase().slice(-6);
+    var waDigits = ((CFG.contact && CFG.contact.whatsapp) || "").replace(/[^0-9]/g, "");
+    var waHref = "";
+    if (waDigits) {
+      var waMsg = "مرحباً، أنا " + nameRaw +
+        "\n📦 منتجاتي: " + itemsRaw +
+        "\n💰 المجموع: " + totalRaw +
+        "\n🔖 المرجع: " + ref +
+        "\nأرجو تأكيد طلبي / الاستفسار عنه.";
+      waHref = "https://wa.me/" + waDigits + "?text=" + encodeURIComponent(waMsg);
+    }
     box.innerHTML =
       '<div class="success-check">✓</div>' +
-      '<h1 class="section-title" style="font-size:1.9rem;margin-bottom:12px">شكراً لك، ' + escapeHtml(params.get("name") || "عميلنا العزيز") + "! 🎉</h1>" +
+      '<h1 class="section-title" style="font-size:1.9rem;margin-bottom:12px">شكراً لك، ' + escapeHtml(nameRaw) + "! 🎉</h1>" +
       '<p style="color:var(--text-dim);margin-bottom:8px">تم تسجيل طلبك بنجاح.<br>طريقة الإتمام: <b style="color:var(--gold)">' + escapeHtml(CFG.paymentLabel || "تأكيد يدوي") + "</b></p>" +
-      '<p style="color:var(--text-dim);margin-bottom:10px">المنتجات: <b style="color:var(--gold)">' + escapeHtml(params.get("items") || "المنتجات الرقمية") + "</b></p>" +
+      '<p style="color:var(--text-dim);margin-bottom:8px">المنتجات: <b style="color:var(--gold)">' + escapeHtml(itemsRaw) + "</b></p>" +
+      '<p style="color:var(--text-dim);margin-bottom:10px">المجموع: <b style="color:var(--gold)">' + escapeHtml(totalRaw) + "</b> • مرجع الطلب: <b style=\"color:var(--gold)\">" + escapeHtml(ref) + "</b></p>" +
       '<div style="background:var(--gradient-soft);border:1.5px dashed rgba(139,92,246,0.5);border-radius:16px;padding:18px;margin:20px auto;max-width:460px;color:var(--text-dim);font-size:0.92rem">' +
         "🕐 " + (CFG.paymentNote || "") +
       "</div>" +
-      '<div class="hero-actions" style="justify-content:center;margin-top:24px">' +
+      (waHref
+        ? '<a href="' + waHref + '" target="_blank" rel="noopener" class="btn btn-wa" style="margin-top:6px">' +
+            "💬 أكّد طلبك الآن عبر واتساب" +
+          "</a>"
+        : "") +
+      '<div class="hero-actions" style="justify-content:center;margin-top:16px">' +
         '<a href="products.html" class="btn btn-primary">متابعة التسوق</a>' +
         '<a href="index.html" class="btn btn-outline">العودة للرئيسية</a>' +
       "</div>";
