@@ -34,7 +34,7 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; text-size-adjust: 100%; -webkit-text-size-adjust: 100%; }
 
 body {
   font-family: var(--font);
@@ -43,7 +43,14 @@ body {
   line-height: 1.7;
   overflow-x: hidden;
   direction: rtl;
+  -webkit-tap-highlight-color: transparent;
+  padding-top: env(safe-area-inset-top);
 }
+
+/* منع الزوم الاحتياطي على الشاشات اللمسية ومنع قفز الإدخال */
+button, a, input, select, textarea, .product-card, .mini-product, .cat-card, .add-btn, .pay-opt, .to-top, .wa-float { touch-action: manipulation; }
+
+button, a { -webkit-touch-callout: none; }
 
 h1, h2, h3, h4 { line-height: 1.35; }
 
@@ -766,7 +773,7 @@ input, select, textarea { font-family: inherit; }
   color: var(--text);
   outline: none;
   transition: all 0.25s;
-  font-size: 0.94rem;
+  font-size: max(16px, 0.94rem);
   width: 100%;
 }
 .field textarea { resize: vertical; min-height: 100px; }
@@ -916,7 +923,7 @@ input, select, textarea { font-family: inherit; }
   100% { transform: scale(1.55); opacity: 0; }
 }
 @media (max-width: 768px) {
-  .wa-float { bottom: 84px; right: 14px; width: 52px; height: 52px; }
+  .wa-float { bottom: calc(84px + env(safe-area-inset-bottom)); right: 14px; width: 52px; height: 52px; }
   .wa-float svg { width: 27px; height: 27px; }
 }
 
@@ -1010,8 +1017,8 @@ input, select, textarea { font-family: inherit; }
   /* الشريط السفلي للتطبيق */
   .app-bar { display: flex; }
   body { padding-bottom: 72px; }
-  .toast { bottom: 88px; }
-  .install-bar { bottom: 88px; }
+  .toast { bottom: calc(88px + env(safe-area-inset-bottom)); }
+  .install-bar { bottom: calc(88px + env(safe-area-inset-bottom)); }
 }
 
 @media (max-width: 480px) {
