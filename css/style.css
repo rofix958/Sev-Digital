@@ -885,6 +885,41 @@ input, select, textarea { font-family: inherit; }
 }
 .to-top.show { opacity: 1; pointer-events: auto; }
 
+/* ===== زر واتساب العائم ===== */
+.wa-float {
+  position: fixed;
+  right: 18px;
+  bottom: 24px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #25d366, #128c7e);
+  color: #fff;
+  box-shadow: 0 12px 26px rgba(37, 211, 102, 0.42);
+  z-index: 900;
+  transition: transform 0.25s;
+}
+.wa-float:hover { transform: scale(1.1); }
+.wa-float svg { width: 30px; height: 30px; }
+.wa-float::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid rgba(37, 211, 102, 0.55);
+  animation: waPulse 2.2s ease-out infinite;
+}
+@keyframes waPulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.55); opacity: 0; }
+}
+@media (max-width: 768px) {
+  .wa-float { bottom: 84px; right: 14px; width: 52px; height: 52px; }
+  .wa-float svg { width: 27px; height: 27px; }
+}
+
 /* ===== تثبيت التطبيق ===== */
 .install-bar {
   position: fixed;
