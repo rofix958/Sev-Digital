@@ -270,7 +270,23 @@ input, select, textarea { font-family: inherit; }
 .section-head p { color: var(--text-dim); margin-top: 12px; font-size: 1.02rem; }
 
 /* ===== هيرو ===== */
-.hero { padding: clamp(48px, 8vw, 96px) 0 56px; position: relative; }
+.hero {
+  padding: clamp(48px, 8vw, 96px) 0 56px;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(1100px 520px at 88% -10%, rgba(139, 92, 246, 0.20), transparent 62%),
+    linear-gradient(195deg, rgba(10, 8, 34, 0.92), rgba(13, 11, 40, 0.78) 48%, rgba(20, 16, 49, 0.94)),
+    url("../images/morocco-chefchaouen.jpg") center/cover no-repeat;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 90px;
+  background: linear-gradient(180deg, transparent, var(--bg));
+  pointer-events: none;
+}
 
 .hero-inner { display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center; }
 
@@ -541,6 +557,26 @@ input, select, textarea { font-family: inherit; }
 .cta-box h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; margin-bottom: 14px; }
 .cta-box p { color: var(--text-dim); max-width: 520px; margin: 0 auto 30px; }
 
+/* ===== الشريط المغربي ===== */
+.morocco-band {
+  position: relative;
+  background:
+    radial-gradient(1000px 480px at 12% 0%, rgba(232, 121, 249, 0.10), transparent 60%),
+    linear-gradient(165deg, rgba(10, 8, 34, 0.94), rgba(16, 13, 45, 0.84) 55%, rgba(9, 7, 30, 0.94)),
+    url("../images/morocco-casablanca.jpg") center/cover no-repeat;
+  border-top: 1px solid rgba(139, 92, 246, 0.35);
+  border-bottom: 1px solid rgba(20, 16, 49, 0.8);
+}
+.morocco-band .cta-box {
+  background: rgba(20, 16, 49, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+}
+.morocco-band .eyebrow { color: var(--gold); }
+.morocco-band .cta-box::before { background: radial-gradient(circle, rgba(217, 153, 71, 0.22), transparent 60%); }
+
 /* ===== التذييل ===== */
 .site-footer { border-top: 1px solid var(--border); padding: 48px 0 20px; margin-top: 40px; background: var(--bg-2); }
 
@@ -566,8 +602,23 @@ input, select, textarea { font-family: inherit; }
 
 /* ===== صفحات داخلية ===== */
 .page-head {
-  padding: 48px 0 20px;
+  padding: clamp(64px, 9vw, 104px) 0 40px;
   text-align: center;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(10, 8, 34, 0.94), rgba(13, 11, 40, 0.86)),
+    var(--gradient-soft);
+  border-bottom: 1px solid rgba(139, 92, 246, 0.18);
+}
+.page-head.head-casablanca {
+  background:
+    linear-gradient(180deg, rgba(10, 8, 34, 0.90), rgba(13, 11, 40, 0.82)),
+    url("../images/morocco-casablanca.jpg") center/cover no-repeat;
+}
+.page-head.head-sahara {
+  background:
+    linear-gradient(180deg, rgba(10, 8, 34, 0.88), rgba(16, 13, 44, 0.80)),
+    url("../images/morocco-sahara.jpg") center 30%/cover no-repeat;
 }
 
 .page-head h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; }
