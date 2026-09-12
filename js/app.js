@@ -156,11 +156,12 @@
     var badge = p.badge
       ? '<span class="product-badge ' + p.badgeColor + '">' + p.badge + "</span>"
       : "";
+    var media = p.img
+      ? '<span class="product-img"><span class="big-emoji">' + p.emoji + '</span><img src="' + p.img + '" alt="' + p.title + '" loading="lazy" onerror="this.remove()"></span>'
+      : '<span class="big-emoji">' + p.emoji + "</span>";
     return (
       '<article class="product-card card-hover-glow" data-cat="' + p.cat + '">' +
-        '<a href="product.html?id=' + p.id + '" class="product-media">' + badge + offer +
-          '<span class="big-emoji">' + p.emoji + "</span>" +
-        "</a>" +
+        '<a href="product.html?id=' + p.id + '" class="product-media">' + badge + offer + media + "</a>" +
         '<div class="product-body">' +
           '<span class="product-cat">' + p.catName + "</span>" +
           '<a href="product.html?id=' + p.id + '"><h3 class="product-title">' + p.title + "</h3></a>" +
@@ -263,8 +264,12 @@
     var relatedBox = document.getElementById("relatedGrid");
     if (relatedBox) renderProductsGrid(relatedBox, related);
 
+    var gallery = product.img
+      ? '<div class="product-gallery"><span class="big-emoji">' + product.emoji + '</span><img src="' + product.img + '" alt="' + product.title + '" onerror="this.remove()"></div>'
+      : '<div class="product-gallery"><span class="big-emoji">' + product.emoji + "</span></div>";
+
     detail.innerHTML =
-      '<div class="product-gallery"><span class="big-emoji">' + product.emoji + "</span></div>" +
+      gallery +
       '<div class="product-info">' +
         '<span class="eyebrow red">' + product.catName + "</span>" +
         "<h1>" + product.title + "</h1>" +

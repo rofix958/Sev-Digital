@@ -409,6 +409,10 @@ input, select, textarea { font-family: inherit; }
 .product-media .big-emoji { font-size: 3.6rem; font-weight: 900; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); transition: transform 0.3s; }
 .product-card:hover .big-emoji { transform: scale(1.12) rotate(-4deg); }
 
+.product-media .product-img { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.product-media .product-img .big-emoji { position: absolute; }
+.product-media .product-img img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 26px 32px; }
+
 .product-badge {
   position: absolute;
   top: 12px;
@@ -692,6 +696,7 @@ input, select, textarea { font-family: inherit; }
 }
 
 .product-gallery .big-emoji { font-size: 7rem; filter: drop-shadow(0 20px 30px rgba(0,0,0,0.35)); animation: floaty 6s ease-in-out infinite; }
+.product-gallery img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; padding: 46px; }
 
 .product-info h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 800; margin: 8px 0 12px; }
 

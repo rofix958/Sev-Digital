@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="340" viewBox="0 0 1024 340">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#4f46e5"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#6d28d9" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#a78bfa" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(20 20) scale(0.5859)">
+    <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#g)"/>
+    <rect x="12" y="12" width="488" height="488" rx="112" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="4"/>
+    <rect x="0" y="0" width="512" height="512" rx="120" fill="url(#g2)"/>
+    <path d="M 196 184 h 104 a 36 36 0 0 1 0 72 h -104 a 36 36 0 0 0 0 72 h 104"
+          fill="none" stroke="#ffffff" stroke-width="34" stroke-linecap="round"/>
+  </g>
+  <text x="374" y="166" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-weight="800" font-size="96" fill="#1e1b4b">Sev Digital</text>
+  <text x="378" y="244" font-family="Segoe UI, Tahoma, Arial, sans-serif" font-weight="600" font-size="38" letter-spacing="1" fill="#6d28d9">متجر المنتجات الرقمية</text>
+</svg>
