@@ -277,7 +277,7 @@ input, select, textarea { font-family: inherit; }
   background:
     radial-gradient(1100px 520px at 88% -10%, rgba(139, 92, 246, 0.20), transparent 62%),
     linear-gradient(195deg, rgba(10, 8, 34, 0.92), rgba(13, 11, 40, 0.78) 48%, rgba(20, 16, 49, 0.94)),
-    url("../images/morocco-chefchaouen.jpg") center/cover no-repeat;
+    url("../images/digital-hero.jpg") center/cover no-repeat;
 }
 .hero::after {
   content: "";
@@ -558,24 +558,24 @@ input, select, textarea { font-family: inherit; }
 .cta-box p { color: var(--text-dim); max-width: 520px; margin: 0 auto 30px; }
 
 /* ===== الشريط المغربي ===== */
-.morocco-band {
+.tech-band {
   position: relative;
   background:
     radial-gradient(1000px 480px at 12% 0%, rgba(232, 121, 249, 0.10), transparent 60%),
     linear-gradient(165deg, rgba(10, 8, 34, 0.94), rgba(16, 13, 45, 0.84) 55%, rgba(9, 7, 30, 0.94)),
-    url("../images/morocco-casablanca.jpg") center/cover no-repeat;
+    url("../images/digital-server.jpg") center/cover no-repeat;
   border-top: 1px solid rgba(139, 92, 246, 0.35);
   border-bottom: 1px solid rgba(20, 16, 49, 0.8);
 }
-.morocco-band .cta-box {
+.tech-band .cta-box {
   background: rgba(20, 16, 49, 0.55);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(139, 92, 246, 0.45);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
 }
-.morocco-band .eyebrow { color: var(--gold); }
-.morocco-band .cta-box::before { background: radial-gradient(circle, rgba(217, 153, 71, 0.22), transparent 60%); }
+.tech-band .eyebrow { color: var(--gold); }
+.tech-band .cta-box::before { background: radial-gradient(circle, rgba(217, 153, 71, 0.22), transparent 60%); }
 
 /* ===== التذييل ===== */
 .site-footer { border-top: 1px solid var(--border); padding: 48px 0 20px; margin-top: 40px; background: var(--bg-2); }
@@ -613,12 +613,12 @@ input, select, textarea { font-family: inherit; }
 .page-head.head-casablanca {
   background:
     linear-gradient(180deg, rgba(10, 8, 34, 0.90), rgba(13, 11, 40, 0.82)),
-    url("../images/morocco-casablanca.jpg") center/cover no-repeat;
+    url("../images/digital-server.jpg") center/cover no-repeat;
 }
 .page-head.head-sahara {
   background:
     linear-gradient(180deg, rgba(10, 8, 34, 0.88), rgba(16, 13, 44, 0.80)),
-    url("../images/morocco-sahara.jpg") center 30%/cover no-repeat;
+    url("../images/digital-circuit.jpg") center 30%/cover no-repeat;
 }
 
 .page-head h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 800; }

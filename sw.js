@@ -1,6 +1,6 @@
 /* Sev Digital — Service Worker: تشغيل التطبيق بدون إنترنت */
 
-const CACHE_NAME = "sev-digital-v12";
+const CACHE_NAME = "sev-digital-v13";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -14,9 +14,9 @@ const APP_SHELL = [
   "./terms.html",
   "./privacy.html",
   "./css/style.css",
-  "./images/morocco-chefchaouen.jpg",
-  "./images/morocco-casablanca.jpg",
-  "./images/morocco-sahara.jpg",
+  "./images/digital-hero.jpg",
+  "./images/digital-server.jpg",
+  "./images/digital-circuit.jpg",
   "./js/data.js",
   "./js/app.js",
   "./manifest.json",
