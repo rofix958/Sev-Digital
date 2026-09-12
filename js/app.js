@@ -740,6 +740,17 @@
       deferredPrompt = null;
     });
 
+    document.addEventListener("click", function (ev) {
+      var t = ev.target && ev.target.closest ? ev.target.closest("#installClose") : null;
+      if (t) {
+        if (ev) ev.preventDefault();
+        dismissBar(true);
+        deferredPrompt = null;
+      }
+    });
+
+    window.addEventListener("appinstalled", function () { dismissBar(true); });
+
     if (yesBtn) yesBtn.addEventListener("click", function () {
       if (!deferredPrompt) { dismissBar(true); return; }
       deferredPrompt.prompt();
