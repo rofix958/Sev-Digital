@@ -1,6 +1,6 @@
 /* Sev Digital — Service Worker: تشغيل التطبيق بدون إنترنت */
 
-const CACHE_NAME = "sev-digital-v6";
+const CACHE_NAME = "sev-digital-v7";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -41,7 +41,7 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(request.url);
 
-  // لا نسترجع طلبات الموارد الخارجية (خطوط، وغيرها) من الكاش
+  // الموارد الخارجية (خطوط وغيرها): شبكة أولاً ثم كاش
   if (url.origin !== location.origin) {
     event.respondWith(
       fetch(request).catch(() => caches.match(request).then((r) => r || caches.match("./index.html")))
@@ -49,16 +49,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // الشبكة أولاً ثم الكاش: ضمان وصول آخر التحديثات دائماً، وتشغيل دون اتصال عند فشل الشبكة
   event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request)
-        .then((response) => {
+    fetch(request)
+      .then((response) => {
+        if (response && (response.ok || response.type === "opaque")) {
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
-          return response;
-        })
-        .catch(() => caches.match("./index.html"));
-    })
+        }
+        return response;
+      })
+      .catch(() => caches.match(request).then((r) => r || caches.match("./index.html")))
   );
 });
