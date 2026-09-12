@@ -8,7 +8,18 @@
   "use strict";
 
   var CFG = window.SITE_CONFIG || {};
-  var CURRENCY = CFG.currency || "$";
+  function detectCurrency() {
+    var fallback = CFG.currency || "$";
+    if (!CFG.detectCurrency || !CFG.currencies) return fallback;
+    try {
+      var lang = (navigator.language || (navigator.languages && navigator.languages[0]) || "").toUpperCase();
+      var m = lang.match(/-([A-Z]{2})$/);
+      if (m && CFG.currencies[m[1]]) return CFG.currencies[m[1]];
+    } catch (e) {}
+    return fallback;
+  }
+  var CURRENCY = detectCurrency();
+  var IS_DOLLAR = CURRENCY === "$";
   var TAX = typeof CFG.taxRate === "number" ? CFG.taxRate : 0.05;
   var PROMO = CFG.promo || { code: "SEV10", discount: 0.1 };
 
@@ -122,7 +133,11 @@
     }, 0);
   }
 
-  function money(n) { return CURRENCY + Number(n).toFixed(2); }
+  function money(n) {
+    var v = Number(n);
+    var s = Number.isInteger(v) ? String(v) : v.toFixed(2);
+    return IS_DOLLAR ? "$" + s : s + " " + CURRENCY;
+  }
 
   /* ---------- شارة السلة ---------- */
   function renderCartCount() {
@@ -151,8 +166,8 @@
           '<a href="product.html?id=' + p.id + '"><h3 class="product-title">' + p.title + "</h3></a>" +
           '<div class="product-rate"><span>★ ' + p.rate + '</span><span class="reviews">(' + p.reviews + ' تقييم) • ' + p.sales + " مبيعات</span></div>" +
           '<div class="product-footer">' +
-            '<div class="price-box"><span class="price">' + CURRENCY + p.price + "</span>" +
-            (p.oldPrice ? '<span class="price-old">' + CURRENCY + p.oldPrice + "</span>" : "") + "</div>" +
+            '<div class="price-box"><span class="price">' + money(p.price) + "</span>" +
+            (p.oldPrice ? '<span class="price-old">' + money(p.oldPrice) + "</span>" : "") + "</div>" +
             '<button class="add-btn" onclick="window.SevAPI.add(' + p.id + ')" title="أضف للسلة" aria-label="أضف للسلة">＋</button>' +
           "</div>" +
         "</div>" +
@@ -264,8 +279,8 @@
           product.features.map(function (f) { return "<li><i>✓</i> " + f + "</li>"; }).join("") +
         "</ul>" +
         '<div class="big-price">' +
-          '<span class="price">' + CURRENCY + product.price + "</span>" +
-          (product.oldPrice ? '<span class="price old">' + CURRENCY + product.oldPrice + "</span>" : "") +
+          '<span class="price">' + money(product.price) + "</span>" +
+          (product.oldPrice ? '<span class="price old">' + money(product.oldPrice) + "</span>" : "") +
         "</div>" +
         '<div class="buy-actions">' +
           '<button class="btn btn-red btn-lg" onclick="window.SevAPI.add(' + product.id + ')">🛒 أضف إلى السلة</button>' +
@@ -310,7 +325,7 @@
         '<div class="cart-item" data-id="' + p.id + '">' +
           '<div class="cart-item-media"><span>' + p.emoji + "</span></div>" +
           '<div class="cart-item-info"><h4>' + p.title + "</h4>" +
-            "<span>" + p.catName + " • سعر الوحدة " + CURRENCY + p.price + "</span></div>" +
+            "<span>" + p.catName + " • سعر الوحدة " + money(p.price) + "</span></div>" +
           '<div class="qty-ctrl">' +
             '<button class="qty-btn" onclick="window.SevAPI.qty(' + p.id + ',-1)">−</button>' +
             '<span class="qty-num">' + Number(item.qty) + "</span>" +
@@ -493,7 +508,7 @@
         '<div class="mini-product" onclick="window.location.href=\'product.html?id=' + p.id + '\'" style="cursor:pointer">' +
           '<span class="mp-icon ' + iconKinds[i % 3] + '">' + p.emoji + "</span>" +
           "<div><p class=\"mp-name\">" + p.title + '</p><p class="mp-cat">' + p.catName + "</p></div>" +
-          '<div class="mp-info"><p class="mp-price">' + CURRENCY + p.price + '</p><p class="mp-sales">🔥 ' + p.sales + " مبيعات</p></div>" +
+          '<div class="mp-info"><p class="mp-price">' + money(p.price) + '</p><p class="mp-sales">🔥 ' + p.sales + " مبيعات</p></div>" +
         "</div>"
       );
     }).join("");
