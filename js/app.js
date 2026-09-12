@@ -572,7 +572,8 @@
 
   function initHeroStat() {
     var el = document.getElementById("statProducts");
-    if (el) el.innerHTML = "<em>" + PRODUCTS.length + "</em>";
+    var em = el ? el.querySelector("em") : null;
+    if (em) em.textContent = PRODUCTS.length;
   }
 
   /* ---------- الصفحة الرئيسية: التصنيفات + المميز + الهيرو ---------- */
@@ -713,7 +714,10 @@
     var closeBtn = document.getElementById("installClose");
     var yesBtn = document.getElementById("installYes");
 
-    try { if (localStorage.getItem("sev_install_dismissed") === "1") installDismissed = true; } catch (e) {}
+    var dismissedSaved = false;
+    try { dismissedSaved = localStorage.getItem("sev_install_dismissed") === "1"; } catch (e) {}
+    if (!dismissedSaved) dismissedSaved = document.cookie.indexOf("sev_install_dismissed=1") > -1;
+    installDismissed = dismissedSaved;
 
     window.addEventListener("beforeinstallprompt", function (e) {
       e.preventDefault();
@@ -724,7 +728,10 @@
     function dismissBar(save) {
       installDismissed = true;
       if (bar) bar.classList.remove("show");
-      if (save) { try { localStorage.setItem("sev_install_dismissed", "1"); } catch (e) {} }
+      if (save) {
+        try { localStorage.setItem("sev_install_dismissed", "1"); } catch (e) {}
+        try { document.cookie = "sev_install_dismissed=1; max-age=31536000; path=/"; } catch (e) {}
+      }
     }
 
     if (closeBtn) closeBtn.addEventListener("click", function (ev) {
