@@ -25,3 +25,5 @@ vendor/
 # إعدادات النشر الخاصه
 .env
 .env.local
+# Local Netlify folder
+.netlify

@@ -19,6 +19,13 @@
     return "rgba(" + r + "," + g + "," + b + "," + a + ")";
   }
 
+  /* حماية من XSS: تهريب أي نص قادم من زوار/روابط قبل عرضه في HTML */
+  function escapeHtml(v) {
+    return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+
   /* ---------- تطبيق الهوية والألوان من config ---------- */
   function applyTheme() {
     var c = CFG.colors;
@@ -101,7 +108,7 @@
     var cart = getCart();
     var item = cart.find(function (i) { return i.id === Number(id); });
     if (!item) return;
-    item.qty += delta;
+    item.qty = Number(item.qty || 0) + delta;
     saveCart(item.qty <= 0 ? cart.filter(function (i) { return i.id !== Number(id); }) : cart);
     if (window.renderCartPage) renderCartPage();
   }
@@ -306,7 +313,7 @@
             "<span>" + p.catName + " • سعر الوحدة " + CURRENCY + p.price + "</span></div>" +
           '<div class="qty-ctrl">' +
             '<button class="qty-btn" onclick="window.SevAPI.qty(' + p.id + ',-1)">−</button>' +
-            '<span class="qty-num">' + item.qty + "</span>" +
+            '<span class="qty-num">' + Number(item.qty) + "</span>" +
             '<button class="qty-btn" onclick="window.SevAPI.qty(' + p.id + ',1)">＋</button>' +
           "</div>" +
           '<div class="cart-item-side">' +
@@ -390,7 +397,7 @@
       orderBox.insertAdjacentHTML("beforeend",
         '<div class="order-item">' +
           '<div class="oi-icon"><span>' + prod.emoji + "</span></div>" +
-          '<div class="oi-info"><h5>' + prod.title + "</h5><span>× " + it.qty + "</span></div>" +
+          '<div class="oi-info"><h5>' + prod.title + "</h5><span>× " + Number(it.qty) + "</span></div>" +
           '<span class="oi-price">' + money(prod.price * it.qty) + "</span>" +
         "</div>"
       );
@@ -435,9 +442,9 @@
     var params = new URLSearchParams(window.location.search);
     box.innerHTML =
       '<div class="success-check">✓</div>' +
-      '<h1 class="section-title" style="font-size:1.9rem;margin-bottom:12px">شكراً لك، ' + (params.get("name") || "عميلنا العزيز") + "! 🎉</h1>" +
-      '<p style="color:var(--text-dim);margin-bottom:8px">تم تسجيل طلبك بنجاح.<br>طريقة الإتمام: <b style="color:var(--gold)">' + (CFG.paymentLabel || "تأكيد يدوي") + "</b></p>" +
-      '<p style="color:var(--text-dim);margin-bottom:10px">المنتجات: <b style="color:var(--gold)">' + (params.get("items") || "المنتجات الرقمية") + "</b></p>" +
+      '<h1 class="section-title" style="font-size:1.9rem;margin-bottom:12px">شكراً لك، ' + escapeHtml(params.get("name") || "عميلنا العزيز") + "! 🎉</h1>" +
+      '<p style="color:var(--text-dim);margin-bottom:8px">تم تسجيل طلبك بنجاح.<br>طريقة الإتمام: <b style="color:var(--gold)">' + escapeHtml(CFG.paymentLabel || "تأكيد يدوي") + "</b></p>" +
+      '<p style="color:var(--text-dim);margin-bottom:10px">المنتجات: <b style="color:var(--gold)">' + escapeHtml(params.get("items") || "المنتجات الرقمية") + "</b></p>" +
       '<div style="background:var(--gradient-soft);border:1.5px dashed rgba(139,92,246,0.5);border-radius:16px;padding:18px;margin:20px auto;max-width:460px;color:var(--text-dim);font-size:0.92rem">' +
         "🕐 " + (CFG.paymentNote || "") +
       "</div>" +
