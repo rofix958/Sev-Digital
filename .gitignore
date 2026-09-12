@@ -27,3 +27,7 @@ vendor/
 .env.local
 # Local Netlify folder
 .netlify
+
+# مشاريع أخرى في نفس المجلد — لست جزءاً من مستودع Sev Digital
+CalorieApp/
+FitnessApp/
