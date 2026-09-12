@@ -707,28 +707,40 @@
 
   /* ---------- PWA ---------- */
   var deferredPrompt = null;
+  var installDismissed = false;
   function initInstall() {
     var bar = document.getElementById("installBar");
     var closeBtn = document.getElementById("installClose");
     var yesBtn = document.getElementById("installYes");
 
+    try { if (localStorage.getItem("sev_install_dismissed") === "1") installDismissed = true; } catch (e) {}
+
     window.addEventListener("beforeinstallprompt", function (e) {
       e.preventDefault();
       deferredPrompt = e;
-      if (localStorage.getItem("sev_install_dismissed") !== "1" && bar) bar.classList.add("show");
+      if (!installDismissed && bar) bar.classList.add("show");
     });
 
-    if (closeBtn) closeBtn.addEventListener("click", function () {
-      bar.classList.remove("show");
-      localStorage.setItem("sev_install_dismissed", "1");
+    function dismissBar(save) {
+      installDismissed = true;
+      if (bar) bar.classList.remove("show");
+      if (save) { try { localStorage.setItem("sev_install_dismissed", "1"); } catch (e) {} }
+    }
+
+    if (closeBtn) closeBtn.addEventListener("click", function (ev) {
+      if (ev) ev.preventDefault();
+      dismissBar(true);
+      deferredPrompt = null;
     });
 
     if (yesBtn) yesBtn.addEventListener("click", function () {
-      if (!deferredPrompt) return;
+      if (!deferredPrompt) { dismissBar(true); return; }
       deferredPrompt.prompt();
       deferredPrompt.userChoice.then(function () {
-        bar.classList.remove("show");
-        localStorage.setItem("sev_install_dismissed", "1");
+        dismissBar(true);
+        deferredPrompt = null;
+      }).catch(function () {
+        dismissBar(true);
         deferredPrompt = null;
       });
     });

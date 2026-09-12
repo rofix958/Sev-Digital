@@ -1,6 +1,6 @@
 /* Sev Digital — Service Worker: تشغيل التطبيق بدون إنترنت */
 
-const CACHE_NAME = "sev-digital-v5";
+const CACHE_NAME = "sev-digital-v6";
 const APP_SHELL = [
   "./",
   "./index.html",
