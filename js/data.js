@@ -20,7 +20,7 @@ const PRODUCTS = [
     title: "نتفليكس Premium — شهر واحد",
     cat: "netflix",
     catName: "نتفليكس",
-    emoji: "🎬",
+
     price: 35,
     oldPrice: 49,
     rate: 4.9,
@@ -36,7 +36,7 @@ const PRODUCTS = [
     title: "نتفليكس Premium — 3 أشهر",
     cat: "netflix",
     catName: "نتفليكس",
-    emoji: "🎬",
+
     price: 95,
     oldPrice: 120,
     rate: 5.0,
@@ -52,7 +52,7 @@ const PRODUCTS = [
     title: "نتفليكس Premium — 6 أشهر",
     cat: "netflix",
     catName: "نتفليكس",
-    emoji: "🎬",
+
     price: 165,
     oldPrice: 210,
     rate: 4.9,
@@ -68,7 +68,7 @@ const PRODUCTS = [
     title: "نتفليكس Premium — سنة كاملة",
     cat: "netflix",
     catName: "نتفليكس",
-    emoji: "🎬",
+
     price: 260,
     oldPrice: 420,
     rate: 4.8,
@@ -86,7 +86,7 @@ const PRODUCTS = [
     title: "باقة IPTV — شهر واحد",
     cat: "iptv",
     catName: "IPTV وقنوات",
-    emoji: "📺",
+
     price: 70,
     oldPrice: 90,
     rate: 4.7,
@@ -102,7 +102,7 @@ const PRODUCTS = [
     title: "باقة IPTV — 3 أشهر",
     cat: "iptv",
     catName: "IPTV وقنوات",
-    emoji: "📺",
+
     price: 170,
     oldPrice: 220,
     rate: 4.8,
@@ -118,7 +118,7 @@ const PRODUCTS = [
     title: "باقة IPTV — سنة VIP",
     cat: "iptv",
     catName: "IPTV وقنوات",
-    emoji: "📺",
+
     price: 520,
     oldPrice: 680,
     rate: 4.9,
@@ -134,7 +134,7 @@ const PRODUCTS = [
     title: "سيرفر IPTV خاص — شهر",
     cat: "iptv",
     catName: "IPTV وقنوات",
-    emoji: "⚡",
+
     price: 120,
     oldPrice: 150,
     rate: 4.8,
@@ -152,7 +152,7 @@ const PRODUCTS = [
     title: "HBO Max — شهر واحد",
     cat: "hbo",
     catName: "HBO Max",
-    emoji: "🔥",
+
     price: 30,
     oldPrice: 40,
     rate: 4.7,
@@ -168,7 +168,7 @@ const PRODUCTS = [
     title: "HBO Max — 3 أشهر",
     cat: "hbo",
     catName: "HBO Max",
-    emoji: "🔥",
+
     price: 80,
     oldPrice: 105,
     rate: 4.8,
@@ -184,7 +184,7 @@ const PRODUCTS = [
     title: "HBO Max — سنة كاملة",
     cat: "hbo",
     catName: "HBO Max",
-    emoji: "🔥",
+
     price: 210,
     oldPrice: 320,
     rate: 4.9,
@@ -202,7 +202,7 @@ const PRODUCTS = [
     title: "ديزني+ — شهر واحد",
     cat: "disney",
     catName: "ديزني+",
-    emoji: "✨",
+
     price: 28,
     oldPrice: 38,
     rate: 4.8,
@@ -218,7 +218,7 @@ const PRODUCTS = [
     title: "ديزني+ — ستة أشهر",
     cat: "disney",
     catName: "ديزني+",
-    emoji: "✨",
+
     price: 140,
     oldPrice: 178,
     rate: 4.9,
@@ -234,7 +234,7 @@ const PRODUCTS = [
     title: "ديزني+ — سنة كاملة",
     cat: "disney",
     catName: "ديزني+",
-    emoji: "✨",
+
     price: 240,
     oldPrice: 350,
     rate: 4.8,
@@ -252,7 +252,7 @@ const PRODUCTS = [
     title: "TOD / STARZPLAY — شهر واحد",
     cat: "tod",
     catName: "TOD / STARZPLAY",
-    emoji: "🌙",
+
     price: 25,
     oldPrice: 35,
     rate: 4.6,
@@ -268,7 +268,7 @@ const PRODUCTS = [
     title: "TOD / STARZPLAY — سنة كاملة",
     cat: "tod",
     catName: "TOD / STARZPLAY",
-    emoji: "🌙",
+
     price: 190,
     oldPrice: 280,
     rate: 4.7,
@@ -286,7 +286,7 @@ const PRODUCTS = [
     title: "Shahid VIP — شهر واحد",
     cat: "other",
     catName: "خدمات مخصصة",
-    emoji: "🎙️",
+
     price: 55,
     oldPrice: 70,
     rate: 4.8,
@@ -302,7 +302,7 @@ const PRODUCTS = [
     title: "YouTube Premium — شهر",
     cat: "other",
     catName: "خدمات مخصصة",
-    emoji: "▶️",
+
     price: 22,
     oldPrice: 30,
     rate: 4.9,
@@ -318,7 +318,7 @@ const PRODUCTS = [
     title: "Spotify Premium — 3 أشهر",
     cat: "other",
     catName: "خدمات مخصصة",
-    emoji: "🎧",
+
     price: 60,
     oldPrice: 85,
     rate: 4.8,
@@ -334,7 +334,7 @@ const PRODUCTS = [
     title: "باقة مخصصة — أي خدمة أخرى",
     cat: "other",
     catName: "خدمات مخصصة",
-    emoji: "🧩",
+
     price: 15,
     oldPrice: 0,
     rate: 5.0,

@@ -408,8 +408,8 @@ input, select, textarea { font-family: inherit; }
   place-items: center;
 }
 
-.product-media .big-emoji { font-size: 3.6rem; font-weight: 900; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3)); transition: transform 0.3s; }
-.product-card:hover .big-emoji { transform: scale(1.12) rotate(-4deg); }
+.product-media 
+.product-card:hover 
 
 
 .product-badge {
@@ -683,16 +683,7 @@ input, select, textarea { font-family: inherit; }
   align-items: start;
 }
 
-.product-gallery {
-  position: relative;
-  border-radius: 22px;
-  background: var(--gradient-soft);
-  border: 1px solid var(--border);
-  aspect-ratio: 1/1;
-  display: grid;
-  place-items: center;
-  overflow: hidden;
-}
+
 .product-info h1 { font-size: clamp(1.6rem, 3.4vw, 2.3rem); font-weight: 800; margin: 8px 0 12px; }
 
 .product-meta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-bottom: 18px; }
