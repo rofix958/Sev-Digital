@@ -156,7 +156,7 @@
     var badge = p.badge
       ? '<span class="product-badge ' + p.badgeColor + '">' + p.badge + "</span>"
       : "";
-    var media = '<span class="big-emoji">' + p.emoji + "</span>";
+    var media = '';
     return (
       '<article class="product-card card-hover-glow" data-cat="' + p.cat + '">' +
         '<a href="product.html?id=' + p.id + '" class="product-media">' + badge + offer + media + "</a>" +
@@ -262,7 +262,7 @@
     var relatedBox = document.getElementById("relatedGrid");
     if (relatedBox) renderProductsGrid(relatedBox, related);
 
-    var gallery = '<div class="product-gallery"><span class="big-emoji">' + product.emoji + "</span></div>";
+    var gallery = '<div class="product-gallery"></div>';
 
     detail.innerHTML =
       gallery +
