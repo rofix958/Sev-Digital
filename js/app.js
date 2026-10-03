@@ -324,7 +324,7 @@
       if (!p) return "";
       return (
         '<div class="cart-item" data-id="' + p.id + '">' +
-          '<div class="cart-item-media"><span>' + p.emoji + "</span></div>" +
+          '<div class="cart-item-media"><span>' + '' + "</span></div>" +
           '<div class="cart-item-info"><h4>' + p.title + "</h4>" +
             "<span>" + p.catName + " • سعر الوحدة " + money(p.price) + "</span></div>" +
           '<div class="qty-ctrl">' +
@@ -563,7 +563,7 @@
     box.innerHTML = items.map(function (p, i) {
       return (
         '<div class="mini-product anim-rise" style="cursor:pointer;animation-delay:' + (i * 140 + 180) + 'ms" onclick="window.location.href=\'product.html?id=' + p.id + '\'">' +
-          '<span class="mp-icon ' + iconKinds[i % 3] + '">' + p.emoji + "</span>" +
+          '<span class="mp-icon ' + iconKinds[i % 3] + '">' + '' + "</span>" +
           "<div><p class=\"mp-name\">" + p.title + '</p><p class="mp-cat">' + p.catName + "</p></div>" +
           '<div class="mp-info"><p class="mp-price">' + money(p.price) + '</p><p class="mp-sales">🔥 ' + p.sales + " مبيعات</p></div>" +
         "</div>"
