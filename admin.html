@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#7c3aed">
-  <title>لوحة التحكم — Seven Digital</title>
+  <title>لوحة التحكم — Sev Digital</title>
   <link rel="icon" href="icons/icon-192.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -192,6 +192,7 @@
       <div class="card">
         <h3>🛍️ ملف المنتجات</h3>
         <p class="sub"><code style="direction:ltr;display:inline-block">js/data.js</code> — فيه التصنيفات وكل المنتجات. هو الملف الوحيد اللي خصك تبدّله فـ 90% ديال الحالات.</p>
+        <div class="alert alert-ok" id="checkBox" style="display:none"></div>
         <div class="toolbar">
           <button class="btn btn-primary btn-lg" id="btnDownloadData">⬇ تحميل data.js</button>
           <button class="btn btn-ghost" id="btnCopyData">📋 نسخ الكود</button>
@@ -239,22 +240,14 @@
     <div class="drawer-body">
       <div class="grp">
         <div class="grp-title">الأساس</div>
-        <div class="emoji-row">
-          <div style="width:64px">
-            <input type="text" class="input" id="fEmoji" maxlength="4" placeholder="🎬">
-          </div>
-          <div style="flex:1">
-            <label class="lbl">اسم المنتج <span class="req">*</span></label>
-            <input type="text" class="input" id="fTitle" placeholder="مثال: نتفليكس Premium — شهر واحد">
-          </div>
-        </div>
-        <div class="emoji-picker" id="emojiPicker"></div>
+        <label class="lbl">اسم المنتج <span class="req">*</span></label>
+        <input type="text" class="input" id="fTitle" placeholder="مثال: نتفليكس Premium — شهر واحد">
       </div>
 
       <div class="grp">
         <div class="grp-title">التصنيف</div>
         <select class="select" id="fCat"></select>
-        <p class="hint">إلا بدّلتي التصنيف، الاسم والأيقونة كيتحدّثو بوحدهم.</p>
+        <p class="hint">إلا بدّلتي التصنيف، الاسم فـ catName كيتحدّث بوحدو.</p>
       </div>
 
       <div class="grp">

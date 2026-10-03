@@ -93,7 +93,7 @@ function loadInitial() {
   saveDraft();
 }
 
-/* ضمان وجود كل الحقول + إصلاح الأيقونات الناقصة */
+/* ضمان وجود كل الحقول */
 function normalizeProduct(p) {
   var c = catByIdSafe(p.cat);
   return {
@@ -101,7 +101,6 @@ function normalizeProduct(p) {
     title: p.title || "منتج بدون عنوان",
     cat: p.cat || "other",
     catName: p.catName || (c ? c.name : ""),
-    emoji: p.emoji || (c ? c.icon : "🧩") || "🧩",
     price: num(p.price, 0),
     oldPrice: num(p.oldPrice, 0),
     rate: num(p.rate, 5),
@@ -136,6 +135,7 @@ function discardDraft() {
   state.products = clone(PRODUCTS).map(normalizeProduct);
   state.config = clone(SITE_CONFIG);
   renderAll();
+  saveDraft();
   toast("رجعنا للمحتوى الأصلي");
 }
 
@@ -214,14 +214,12 @@ function renderStats() {
     ? Math.round(on.reduce(function (s, p) { return s + p.price; }, 0) / on.length)
     : 0;
   var withOffer = state.products.filter(function (p) { return p.oldPrice > p.price && p.price > 0; }).length;
-  var noEmoji = state.products.filter(function (p) { return !p.emoji; }).length;
 
   $("#stats").innerHTML =
     '<div class="stat"><b>' + state.products.length + "</b><span>منتج</span></div>" +
     '<div class="stat"><b>' + state.categories.length + "</b><span>تصنيف</span></div>" +
     '<div class="stat"><b>' + avg + "</b><span>متوسط السعر</span></div>" +
-    '<div class="stat"><b>' + withOffer + "</b><span>عندها تخفيض</span></div>" +
-    '<div class="stat"><b>' + noEmoji + "</b><span>بلا صورة</span></div>";
+    '<div class="stat"><b>' + withOffer + "</b><span>عندها تخفيض</span></div>";
 }
 
 /* ---------- قائمة المنتجات ---------- */
@@ -262,7 +260,6 @@ function renderProductList() {
 
     return (
       '<div class="pcard" data-i="' + i + '">' +
-        '<div class="pemoji">' + esc(p.emoji || "❔") + "</div>" +
         '<div class="pmeta">' +
           '<div class="ptitle">' + esc(p.title) + ' <span class="pid">#' + esc(p.id) + "</span>" + badge + "</div>" +
           '<div class="psub">' +
@@ -375,8 +372,7 @@ function renderSettings() {
     ? state.products.map(function (p) {
         var id = String(p.id);
         return (
-          '<label class="pcard" style="grid-template-columns:44px 1fr;cursor:pointer">' +
-            '<div class="pemoji" style="width:44px;height:44px;font-size:1.3rem">' + esc(p.emoji || "❔") + "</div>" +
+          '<label class="pcard" style="grid-template-columns:1fr auto;cursor:pointer">' +
             '<div class="pmeta"><div class="ptitle" style="font-size:.88rem">' + esc(p.title) + "</div></div>" +
             '<input type="checkbox" data-hero="' + esc(id) + '"' + (hero.indexOf(id) > -1 ? " checked" : "") +
             ' style="width:20px;height:20px;accent-color:#8b5cf6">' +
@@ -422,7 +418,7 @@ function renderPreview() {
       ? '<span class="pv-badge ' + esc(p.badgeColor || "tag-mute") + '">' + esc(p.badge) + "</span>" : "";
     return (
       '<article class="pv-card">' +
-        '<div class="pv-media">' + badge + offer + esc(p.emoji || "❔") + "</div>" +
+        '<div class="pv-media">' + badge + offer + "</div>" +
         '<div class="pv-body">' +
           '<span class="pv-cat">' + esc(catName(p.cat)) + "</span>" +
           '<h3 class="pv-title">' + esc(p.title) + "</h3>" +
@@ -446,17 +442,20 @@ function renderPreview() {
 function openEditor(i) {
   CURRENT_PRODUCT = i;
   var isNew = i < 0;
-  var p = isNew
-    ? normalizeProduct({
-        id: nextId(), title: "", cat: firstRealCat(),
-        price: 0, oldPrice: 0, rate: 5, reviews: 0, sales: "",
-        badge: null, badgeColor: "", features: [""], desc: ""
-      })
-    : clone(state.products[i]);
+  var p;
+  if (isNew) {
+    var c0 = catById(firstRealCat());
+    p = {
+      id: nextId(), title: "", cat: c0 ? c0.id : "other",
+      price: 0, oldPrice: 0, rate: 5, reviews: 0, sales: "",
+      badge: null, badgeColor: "", features: [], desc: ""
+    };
+  } else {
+    p = clone(state.products[i]);
+  }
 
   fillEditorSelects();
   setVal("fId", p.id);
-  setVal("fEmoji", p.emoji);
   setVal("fTitle", p.title);
   $("#fCat").value = p.cat;
   setVal("fPrice", p.price);
@@ -468,7 +467,6 @@ function openEditor(i) {
   setVal("fFeatures", p.features.join("\n"));
   setVal("fDesc", p.desc);
   setBadgeColor(p.badgeColor || "");
-  renderEmojiPicker(p.emoji);
 
   $("#editorTitle").textContent = isNew ? "➕ منتج جديد" : "✏️ تعديل المنتج";
   $("#drawer").classList.add("on");
@@ -494,13 +492,6 @@ function renderSwatches() {
   }).join("");
 }
 
-function renderEmojiPicker(current) {
-  var uniq = EMOJI_CHOICES.filter(function (e, i) { return EMOJI_CHOICES.indexOf(e) === i; });
-  $("#emojiPicker").innerHTML = uniq.map(function (e) {
-    return '<button type="button" data-emoji="' + esc(e) + '">' + e + "</button>";
-  }).join("");
-}
-
 function commitEditor() {
   var cat = $("#fCat").value;
   var c = catById(cat);
@@ -523,7 +514,6 @@ function commitEditor() {
     title: title,
     cat: cat,
     catName: c ? c.name : "",
-    emoji: ($("#fEmoji").value || "").trim() || (c ? c.icon : "🧩"),
     price: price,
     oldPrice: oldPrice,
     rate: num($("#fRate").value, 5),
@@ -577,10 +567,14 @@ function firstRealCat() {
 }
 
 function flashRow(id) {
-  var row = $('#plist .pcard[data-i="' + state.products.map(function (p) { return p.id; }).indexOf(id) + '"]');
+  var idx = state.products.map(function (p) { return p.id; }).indexOf(id);
+  if (idx < 0) return;
+  var row = $('#plist .pcard[data-i="' + idx + '"]');
   if (!row) return;
   row.classList.add("flash");
-  row.scrollIntoView({ block: "center", behavior: "smooth" });
+  try {
+    if (row.scrollIntoView) row.scrollIntoView({ block: "center", behavior: "smooth" });
+  } catch (e) {}
   setTimeout(function () { row.classList.remove("flash"); }, 900);
 }
 
@@ -709,14 +703,16 @@ function buildDataJS() {
   lines.push("");
   lines.push("const PRODUCTS = [");
 
-  var blocks = [];
-  state.products.forEach(function (p) {
+  /* الفاصلة خاصها تكون بعد كل منتج، ماشي بعد كل سطر —
+     إلا وضعنا الفاصلة بعد تعليق، كتخلق "ثقب" فـ المصفوفة وكيزيدو الطول */
+  var chunks = [];
+  var lastCat = null;
+  state.products.forEach(function (p, i) {
     var body = [
       "    id: " + jnum(p.id),
       "    title: " + jstr(p.title),
       "    cat: " + jstr(p.cat),
       "    catName: " + jstr(p.catName || catName(p.cat)),
-      "    emoji: " + jstr(p.emoji || "🧩"),
       "    price: " + jnum(p.price),
       "    oldPrice: " + jnum(p.oldPrice),
       "    rate: " + jnum(p.rate),
@@ -727,26 +723,89 @@ function buildDataJS() {
       "    features: [" + p.features.map(jstr).join(", ") + "]",
       "    desc: " + jstr(p.desc)
     ].join(",\n");
-    blocks.push("  {\n" + body + "\n  }");
-  });
 
-  /* نحط تعليقات بين التصنيفات باش الملف يبقى مقروء */
-  var withComments = [];
-  var lastCat = null;
-  blocks.forEach(function (b, i) {
-    var p = state.products[i];
+    var chunk = "";
     if (p.cat !== lastCat) {
       lastCat = p.cat;
       var c = catById(p.cat);
-      withComments.push("  /* " + (c ? c.icon + " " + c.name : p.cat) + " */");
+      chunk += "  /* " + (c ? c.icon + " " + c.name : p.cat) + " */\n";
     }
-    withComments.push(b);
+    chunk += "  {\n" + body + "\n  }";
+    if (i < state.products.length - 1) chunk += ",";
+    chunks.push(chunk);
   });
 
-  lines.push(withComments.join(",\n"));
+  if (!chunks.length) lines.push("  /* ما كاين حتى منتج */");
+  lines.push(chunks.join("\n"));
   lines.push("];");
   lines.push("");
   return lines.join("\n");
+}
+
+/* تشغيل الكود المولّد للفحص.
+   ما كنستعملوش eval ولا new Function، حيت CSP فـ _headers كيسمح بـ inline
+   ولكن ماشي بـ 'unsafe-eval' — كان EvalError وكيوقف التصدير كامل.
+   الحل: نحطّو الكود فـ <script> مؤقت داخل IIFE ونقراو النتيجة من window. */
+function runGenerated(code, names) {
+  var key = "__adminGen_" + Math.random().toString(36).slice(2);
+  var el = document.createElement("script");
+  el.textContent =
+    "(function(){try{" + code + "\n" +
+    "window." + key + "={ok:true,v:{" + names.join(",") + "}};" +
+    "}catch(e){window." + key + "={ok:false,e:String((e&&e.message)||e)};}})();";
+  document.head.appendChild(el);
+  var out = window[key];
+  document.head.removeChild(el);
+  try { delete window[key]; } catch (e) { window[key] = undefined; }
+  if (!out) throw new Error("الكود المولّد ما تفذّش (خطأ ف الصياغة؟)");
+  if (!out.ok) throw new Error(out.e);
+  return out.v;
+}
+
+/* فحص أمان: نتأكد أن الملف المولّد صحيح 100% قبل ما نصدّر */
+function selfCheck() {
+  var problems = [];
+
+  try {
+    var data = runGenerated(buildDataJS(), ["PRODUCTS", "CATEGORIES"]);
+    if (data.PRODUCTS.length !== state.products.length) {
+      problems.push("عدد المنتجات المولّد (" + data.PRODUCTS.length + ") ما كايساويش مع " + state.products.length);
+    }
+    if (data.CATEGORIES.length !== state.categories.length) {
+      problems.push("عدد التصنيفات المولّد (" + data.CATEGORIES.length + ") ما كايساويش مع " + state.categories.length);
+    }
+    var ids = {};
+    state.products.forEach(function (p, i) {
+      var got = data.PRODUCTS[i];
+      if (!got) return;
+      if (got.id !== p.id) problems.push("المنتج #" + (i + 1) + " تبدّل ترتيبو");
+      if (got.features.length !== p.features.length) problems.push("مميزات «" + p.title + "» تغيّرات");
+      if (got.title !== p.title) problems.push("عنوان «" + p.title + "» تبدّل");
+      if (ids[got.id]) problems.push("معرّف مكرر: " + got.id);
+      ids[got.id] = 1;
+    });
+  } catch (e) {
+    problems.push("خطأ فالكود المولّد: " + e.message);
+  }
+
+  try {
+    runGenerated(buildConfigJS(), ["SITE_CONFIG"]);
+  } catch (e) {
+    problems.push("خطأ فملف الإعدادات المولّد: " + e.message);
+  }
+
+  /* تحذيرات (ما كتمنعش التصدير) */
+  var warns = [];
+  state.products.forEach(function (p) {
+    if (!p.title) warns.push(" منتج بلا عنوان");
+    if (!p.features.length) warns.push(" «" + p.title + "» بلا مميزات");
+    if (p.oldPrice && p.oldPrice < p.price) warns.push(" ثمن التخفيض أكبر من «" + p.title + "»");
+  });
+  state.products.forEach(function (p) {
+    if (p.cat === "all" || !catById(p.cat)) warns.push(" «" + p.title + "» في تصنيف غير موجود");
+  });
+
+  return { errors: problems, warnings: warns };
 }
 
 function buildConfigJS() {
@@ -780,6 +839,32 @@ function buildConfigJS() {
 
 function renderCode() {
   $("#codeOut").value = buildDataJS();
+  renderCheck();
+}
+
+function renderCheck() {
+  var r = selfCheck();
+  var box = $("#checkBox");
+
+  if (r.errors.length) {
+    box.className = "alert alert-err";
+    box.innerHTML = "<span>❌</span><div><b>ما تنساش الملف!</b><br>" +
+      r.errors.map(esc).join("<br>") + "</div>";
+    box.style.display = "flex";
+  } else if (r.warnings.length) {
+    box.className = "alert alert-warn";
+    box.innerHTML = "<span>⚠️</span><div><b>الملف صحيح، ولكن عندك</b> " +
+      r.warnings.length + " تنبيه: <span style=\"opacity:.85\">" +
+      r.warnings.slice(0, 6).map(esc).join(" · ") +
+      (r.warnings.length > 6 ? " …" : "") + "</span></div>";
+    box.style.display = "flex";
+  } else {
+    box.className = "alert alert-ok";
+    box.innerHTML = "<span>✅</span><div>الملف صحيح 100% — " +
+      state.products.length + " منتج فـ " + state.categories.length +
+      " تصنيف. تقدر تحمّلو.</div>";
+    box.style.display = "flex";
+  }
 }
 
 function download(filename, text) {
@@ -860,6 +945,8 @@ function switchTab(name) {
   $$(".view").forEach(function (v) { v.classList.toggle("on", v.id === "view-" + name); });
   if (name === "export") renderCode();
   if (name === "preview") renderPreview();
+  if (name === "categories") renderCategoryList();
+  if (name === "settings") renderSettings();
 }
 
 function afterChange() {
@@ -872,11 +959,17 @@ function lightUpdate() {
   saveDraft();
   applyColors();
   renderStats();
-  renderPreview();
-  renderCode();
+  renderProductList();
+  if ($("#view-preview").classList.contains("on")) renderPreview();
+  if ($("#view-export").classList.contains("on")) renderCode();
 }
 
+var isBound = false;
+
 function bind() {
+  if (isBound) return;
+  isBound = true;
+
   /* التبويبات */
   $$(".tab").forEach(function (t) {
     t.addEventListener("click", function () { switchTab(t.dataset.tab); });
@@ -951,29 +1044,16 @@ function bind() {
     if (b) setBadgeColor(b.dataset.bc);
   });
 
-  $("#emojiPicker").addEventListener("click", function (e) {
-    var b = e.target.closest("[data-emoji]");
-    if (b) $("#fEmoji").value = b.dataset.emoji;
-  });
-
   $("#catEmojiPicker").addEventListener("click", function (e) {
     var b = e.target.closest("[data-emoji]");
     if (b) $("#cIcon").value = b.dataset.emoji;
   });
 
-  /* تغيير التصنيف → يحدّث الاسم والأيقونة تلقائياً */
+  /* تغيير التصنيف → يحدّث الاسم فـ catName تلقائياً */
   $("#fCat").addEventListener("change", function () {
     var c = catById(this.value);
-    if (!c) return;
-    if (!$("#fBadge").value) $("#fBadge").value = "";
-    var emojiInput = $("#fEmoji");
-    if (!emojiInput.value || emojiInput.dataset.auto === "1") {
-      emojiInput.value = c.icon || "🧩";
-    }
-    emojiInput.dataset.auto = "1";
+    if (c) $("#fBadge").setAttribute("data-cat", c.name);
   });
-
-  $("#fEmoji").addEventListener("input", function () { this.dataset.auto = "0"; });
 
   /* الإعدادات */
   var bindText = function (id, fn) {
@@ -1043,16 +1123,19 @@ function bind() {
 
   /* التصدير */
   $("#btnDownloadData").addEventListener("click", function () {
+    if (selfCheck().errors.length) { switchTab("export"); toast("صحّح الأخطاء قبل التحميل", true); return; }
     download("data.js", buildDataJS());
     toast("تنزّل data.js — بدّلو بـ js/data.js 👈");
   });
+  $("#btnCopyData").addEventListener("click", function () {
+    if (selfCheck().errors.length) { switchTab("export"); toast("صحّح الأخطاء قبل النسخ", true); return; }
+    copyText(buildDataJS(), "تنسخ الكود ✅ الصقو في js/data.js");
+  });
   $("#btnDownloadConfig").addEventListener("click", function () {
+    if (selfCheck().errors.length) { switchTab("export"); toast("صحّح الأخطاء قبل التحميل", true); return; }
     if (!confirm("تأكيد؟\n\nملف config.js الجديد ما كيحملش التعليقات القديمة اللي كانت كاينة فيه.\nغادي تبدّل الملف كامل.")) return;
     download("config.js", buildConfigJS());
     toast("تنزّل config.js — بدّلو بـ js/config.js 👈");
-  });
-  $("#btnCopyData").addEventListener("click", function () {
-    copyText(buildDataJS(), "تنسخ الكود ✅ الصقو في js/data.js");
   });
   $("#btnExportJSON").addEventListener("click", exportJSON);
   $("#btnImportJSON").addEventListener("click", function () { $("#fileJSON").click(); });
@@ -1083,9 +1166,12 @@ function bind() {
    7) الإقلاع
    ============================================================ */
 
+var hasBooted = false;
+
 document.addEventListener("DOMContentLoaded", function () {
+  if (hasBooted) return;
+  hasBooted = true;
   renderSwatches();
-  renderEmojiPicker("");
   renderEmojiPickerCat();
   bind();
   loadInitial();

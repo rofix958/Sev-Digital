@@ -412,7 +412,6 @@
       shown.push(prod);
       orderBox.insertAdjacentHTML("beforeend",
         '<div class="order-item">' +
-          '<div class="oi-icon"><span>' + prod.emoji + "</span></div>" +
           '<div class="oi-info"><h5>' + prod.title + "</h5><span>× " + Number(it.qty) + "</span></div>" +
           '<span class="oi-price">' + money(prod.price * it.qty) + "</span>" +
         "</div>"
